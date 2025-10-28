@@ -1,0 +1,8 @@
+html5QrCode.start(
+  { facingMode: "environment" },
+  { fps: 10 },
+  onScanSuccess,
+  errorMessage => {
+    alert("Error cámara o QR: " + errorMessage);
+  }
+);
