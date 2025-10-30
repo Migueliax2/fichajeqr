@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Fichaje Diario QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Fichaje Diario con QR</h2>
+  <form id="fichaje-form">
+    <label>Nombre trabajador:<br>
+      <input type="text" id="nombre" required placeholder="Introduce tu nombre completo">
+    </label>
+    <br><br>
+    <label>DNI/NIF:<br>
+      <input type="text" id="dni" required placeholder="DNI/NIF">
+    </label>
+    <br><br>
+    <label>Tipo de fichaje:<br>
+      <select id="tipo" required>
+        <option value="entrada">Entrada</option>
+        <option value="salida">Salida</option>
+      </select>
+    </label>
+    <br><br>
+    <div id="reader" style="width:300px;"></div>
+    <p id="qr-result"></p>
+    <button type="submit" disabled id="btn-fichar">Fichar</button>
+  </form>
+  <script>
+window.addEventListener('DOMContentLoaded', function() {
+  let qrValue = "";
+
+  function onScanSuccess(decodedText) {
+    document.getElementById('qr-result').textContent = "QR detectado: " + decodedText;
+    qrValue = decodedText;
+    document.getElementById('btn-fichar').disabled = false;
+  }
+
+  function onScanFailure(error) {
+    document.getElementById('qr-result').textContent = "Error escáner: " + error;
+  }
+
+  try {
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess,
+      onScanFailure
+    );
+  } catch (e) {
+    document.getElementById('qr-result').textContent = "ERROR librería QR: " + e;
+    alert("ERROR librería QR: " + e);
+  }
+
+  document.getElementById('fichaje-form').onsubmit = async function(e){
+    e.preventDefault();
+    if(!qrValue) {
+      alert("Primero escanea el código QR.");
+      return;
+    }
+    const nombre = document.getElementById('nombre').value.trim();
+    const dni = document.getElementById('dni').value.trim();
+    const tipo = document.getElementById('tipo').value;
+
+    try {
+      await fetch("https://primary-production-2aed.up.railway.app/webhook/fichaje-qr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre, dni, tipo,
+          qr: qrValue,
+          fecha: new Date().toISOString()
+        })
+      });
+      alert("Fichaje registrado con éxito");
+      document.getElementById('fichaje-form').reset();
+      document.getElementById('qr-result').textContent = "";
+      document.getElementById('btn-fichar').disabled = true;
+      qrValue = "";
+    } catch (err) {
+      alert("Error al enviar los datos: " + err);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,20 +1,12 @@
 {
   "short_name": "FichajeQR",
-  "name": "Control Diario de Fichaje por QR",
+  "name": "Fichaje QR · SolucionesBot",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
+    { "src": "icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512" }
   ],
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1976d2"
+  "background_color": "#0b0c10",
+  "theme_color": "#d21d5a"
 }
