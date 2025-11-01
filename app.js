@@ -48,14 +48,13 @@ function addToControlTable(items){
 function loadDatos(){
   const d = JSON.parse(localStorage.getItem(LS_DATOS) || "{}");
   if(d.nombre) $('#nombre').value = d.nombre;
-  if(d.dni) $('#dni').value = d.dni;
-  if(d.uid) $('#uid').value = d.uid;
+  if(d.uido) $('#uid').value = d.uido;
   const qrl = localStorage.getItem(LS_QR_LINK)||"";
   updateFicharState(!!qrl);
 }
 async function verifyDatos(d){
   if(!VALIDATE_URL) return {ok:false};
-  const params = new URLSearchParams({dni: d.dni||"", nombre: d.nombre||""});
+  const params = new URLSearchParams({uido: d.uido||"", nombre: d.nombre||""});
   try{
     const r = await fetch(`${VALIDATE_URL}?${params.toString()}`, {method:"GET"});
     const j = await r.json();
@@ -88,7 +87,7 @@ function updateFicharState(enabled){
 }
 function saveDatos(e){
   e.preventDefault();
-  const d = { nombre: $('#nombre').value.trim(), dni: $('#dni').value.trim(), uid: $('#uid').value.trim() };
+  const d = { nombre: $('#nombre').value.trim(), uido: $('#uido').value.trim() };
   localStorage.setItem(LS_DATOS, JSON.stringify(d));
   $('#saved-datos').hidden = false;
   setTimeout(()=>$('#saved-datos').hidden = true, 1600);
