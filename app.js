@@ -1,7 +1,8 @@
 /* App core */
 const WEBHOOK = "https://primary-production-2aed.up.railway.app/webhook/fichaje-qr"; // n8n
 // Pega aquí tu validador (n8n o Apps Script):
-const VALIDATE_URL = "https://TU-ENDPOINT/validar-trabajador"; // ?dni=...&nombre=...
+const VALIDATE_URL = "https://TU-DOMINIO.railway.app/webhook/validar-trabajador";
+ // ?dni=...&nombre=...
 
 const LS_DATOS = "sb_fq_datos";
 const LS_FICHAJES = "sb_fq_fichajes";
