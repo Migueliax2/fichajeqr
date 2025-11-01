@@ -45,35 +45,34 @@
     </section>
 
     <!-- 2) FICHAJE -->
-    <section id="tab-fichaje" class="tab">
-      <div class="panel">
-        <h2 class="ribbon">FICHAJE</h2>
+    <div class="row wrap gap">
+  <div class="box">
+    <label>Tipo
+      <select id="tipo">
+        <option value="entrada">Entrada</option>
+        <option value="salida">Salida</option>
+      </select>
+    </label>
 
-        <div class="row wrap gap">
-          <div class="box">
-            <label>Tipo
-              <select id="tipo">
-                <option value="entrada">Entrada</option>
-                <option value="salida">Salida</option>
-              </select>
-            </label>
+    <!-- Aviso de estado de verificación -->
+    <p id="verif-msg" class="muted">Completa y guarda tus DATOS para activar el fichaje.</p>
 
-            <div class="qr-wrapper">
-              <div id="reader"></div>
-              <p id="qr-result" class="muted">Escanea tu QR…</p>
-            </div>
+    <!-- Escáner solo como fallback -->
+    <div id="scan-wrap" class="qr-wrapper">
+      <div id="reader"></div>
+      <p id="qr-result" class="muted">Escanea tu QR…</p>
+    </div>
 
-            <button id="btn-fichar" class="primary big" disabled>FICHAR</button>
-            <p id="fichaje-msg" class="muted"></p>
-          </div>
+    <button id="btn-fichar" class="primary big" disabled>FICHAR</button>
+    <p id="fichaje-msg" class="muted"></p>
+  </div>
 
-          <div class="box">
-            <h3>Último fichaje</h3>
-            <pre id="ultimo-fichaje" class="code small">—</pre>
-          </div>
-        </div>
-      </div>
-    </section>
+  <div class="box">
+    <h3>Último fichaje</h3>
+    <pre id="ultimo-fichaje" class="code small">—</pre>
+  </div>
+</div>
+
 
     <!-- 3) CONTROL -->
     <section id="tab-control" class="tab">
