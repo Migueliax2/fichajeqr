@@ -30,46 +30,51 @@
           <label>Nombre y apellidos
             <input id="nombre" type="text" required placeholder="Tu nombre completo" />
           </label>
-           <label>UIDO/ID 
-            <input id="uido" type="text" placeholder="Si usas NFC o ID interno" />
+          <label>UIDO / ID interno
+            <input id="uido" type="text" required placeholder="Código NFC o ID interno" />
           </label>
           <div class="actions">
             <button type="submit">Guardar datos</button>
           </div>
         </form>
-        <p id="saved-datos" class="ok" hidden>✅ Datos guardados.</p>
+        <p id="saved-datos" class="ok" hidden>✅ Datos guardados correctamente.</p>
       </div>
     </section>
 
     <!-- 2) FICHAJE -->
-    <div class="row wrap gap">
-  <div class="box">
-    <label>Tipo
-      <select id="tipo">
-        <option value="entrada">Entrada</option>
-        <option value="salida">Salida</option>
-      </select>
-    </label>
+    <section id="tab-fichaje" class="tab">
+      <div class="panel">
+        <h2 class="ribbon">FICHAJE</h2>
 
-    <!-- Aviso de estado de verificación -->
-    <p id="verif-msg" class="muted">Completa y guarda tus DATOS para activar el fichaje.</p>
+        <div class="row wrap gap">
+          <div class="box">
+            <label>Tipo
+              <select id="tipo">
+                <option value="entrada">Entrada</option>
+                <option value="salida">Salida</option>
+              </select>
+            </label>
 
-    <!-- Escáner solo como fallback -->
-    <div id="scan-wrap" class="qr-wrapper">
-      <div id="reader"></div>
-      <p id="qr-result" class="muted">Escanea tu QR…</p>
-    </div>
+            <!-- Aviso de verificación -->
+            <p id="verif-msg" class="muted">Guarda tus datos para activar el fichaje.</p>
 
-    <button id="btn-fichar" class="primary big" disabled>FICHAR</button>
-    <p id="fichaje-msg" class="muted"></p>
-  </div>
+            <!-- Escáner (solo si no se valida automáticamente) -->
+            <div id="scan-wrap" class="qr-wrapper">
+              <div id="reader"></div>
+              <p id="qr-result" class="muted">Escanea tu QR…</p>
+            </div>
 
-  <div class="box">
-    <h3>Último fichaje</h3>
-    <pre id="ultimo-fichaje" class="code small">—</pre>
-  </div>
-</div>
+            <button id="btn-fichar" class="primary big" disabled>FICHAR</button>
+            <p id="fichaje-msg" class="muted"></p>
+          </div>
 
+          <div class="box">
+            <h3>Último fichaje</h3>
+            <pre id="ultimo-fichaje" class="code small">—</pre>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- 3) CONTROL -->
     <section id="tab-control" class="tab">
@@ -88,7 +93,7 @@
                 <th>Hora</th>
                 <th>Tipo</th>
                 <th>Nombre</th>
-                 <th>QR</th>
+                <th>UIDO</th>
                 <th>Enviado</th>
               </tr>
             </thead>
@@ -102,7 +107,7 @@
     <section id="tab-nota" class="tab">
       <div class="panel">
         <h2 class="ribbon">NOTA</h2>
-        <textarea id="nota" rows="12" placeholder="Escribe aquí notas internas (solo visibles en este dispositivo)…"></textarea>
+        <textarea id="nota" rows="10" placeholder="Notas internas (solo visibles en este dispositivo)…"></textarea>
         <div class="actions">
           <button id="btn-guardar-nota">Guardar nota</button>
         </div>
@@ -118,3 +123,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+
