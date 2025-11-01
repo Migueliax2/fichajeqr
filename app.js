@@ -1,6 +1,6 @@
 /* ==== CONFIG ==== */
 const WEBHOOK = "https://TU-DOMINIO.railway.app/webhook/fichaje-qr";           // n8n (POST)
-const VALIDATE_URL = "https://TU-DOMINIO.railway.app/webhook/validar-trabajador"; // n8n (GET)
+const VALIDATE_URL = "https://primary-production-2aed.up.railway.app/webhook/validar-trabajador";
 
 /* ==== KEYS LS ==== */
 const LS_DATOS = "sb_fq_datos";
