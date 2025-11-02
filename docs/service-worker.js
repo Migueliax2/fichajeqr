@@ -1,5 +1,5 @@
 // Nombre del caché
-const CACHE_NAME = "solucionesbot-fichajeqr-v2";
+const CACHE_NAME = "solucionesbot-fichajeqr-v8";
 
 // Archivos a cachear
 const ASSETS = [
