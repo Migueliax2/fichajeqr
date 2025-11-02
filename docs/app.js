@@ -76,10 +76,15 @@ async function validarAcceso(nombre, uido){
   fd.append("origen", "PWA");
 
   const r = await fetch(VALIDATE_URL, { method: "POST", body: fd });
-  if (!r.ok) throw new Error(`VALIDATE_URL HTTP ${r.status}`);
-  const j = await r.json().catch(()=> ({}));
-  return j?.ok === true;
+  if (!r.ok) return false;
+
+  let j = {};
+  try { j = await r.json(); } catch { j = {}; }
+
+  // acepta varias formas: ok, found, encontrado
+  return j.ok === true || j.found === true || j.encontrado === true;
 }
+
 
 /* ==== API: ENVIAR FICHAJE (POST FormData) ==== */
 async function enviarFichaje({tipo, nombre, uido}){
