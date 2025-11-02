@@ -67,8 +67,12 @@ function saveFichajes(arr){ LS.set(LS_FICHAJES, arr); renderControl(arr); }
 function renderControl(items){
   const tbody = document.querySelector('#tabla-control tbody');
   if(!tbody) return;
+
+  const activo = LS.get(LS_DATOS, {nombre:'',uido:''});
+  const propios = items.filter(it => it.nombre === activo.nombre && it.uido === activo.uido);
+
   tbody.innerHTML = "";
-  items.slice().reverse().forEach(it=>{
+  propios.slice().reverse().forEach(it=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${it.fecha || ""}</td>
@@ -81,6 +85,19 @@ function renderControl(items){
     tbody.appendChild(tr);
   });
 }
+
+function ultimoDelTrabajador(nombre, uido){
+  const arr = loadFichajes();
+  return arr.slice().reverse().find(it => it.nombre === nombre && it.uido === uido) || null;
+}
+
+function setTipoSugerido($tipo, nombre, uido){
+  if(!$tipo) return;
+  const last = ultimoDelTrabajador(nombre, uido);
+  const sugerido = last?.tipo?.toLowerCase() === 'entrada' ? 'salida' : 'entrada';
+  $tipo.value = (sugerido === 'salida') ? 'salida' : 'entrada';
+}
+
 
 /* ==== API: VALIDACIÓN (POST) ==== */
 async function validarAcceso(nombre, uido){
@@ -144,10 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Cargar datos/nota/tabla
   const saved = LS.get(LS_DATOS, {});
+  s
   if ($nombre && saved.nombre) $nombre.value = saved.nombre;
   if ($uido   && saved.uido)   $uido.value   = saved.uido;
   loadNota();
   renderControl(loadFichajes());
+  etTipoSugerido($tipo, saved.nombre || '', saved.uido || '');
 
   // Pintar último fichaje guardado
   const last = LS.get(LS_ULTIMO, null);
@@ -235,6 +254,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if ($ult) $ult.textContent = `${tipo.toUpperCase()} · ${meta.fecha} ${meta.hora}`;
 
       tell($fMsg, "✅ Fichaje enviado.", "ok");
+      // Alterna automáticamente para el próximo fichaje
+if ($tipo) {
+  $tipo.value = (tipo === 'entrada') ? 'salida' : 'entrada';
+}
+
     }catch(e){
       // Cola offline
       const arr = loadFichajes();
