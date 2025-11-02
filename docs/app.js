@@ -102,28 +102,27 @@ async function validarAcceso(nombre, uido){
   return j?.ok === true;
 }
 
-/* ==== API: ENVIAR FICHAJE (POST) ==== */
+/* ==== API: ENVIAR FICHAJE (POST via FormData) ==== */
 async function enviarFichaje({tipo, nombre, uido}){
   const t = ahoraISO();
-  const payload = {
-    tipo,                                // "entrada" | "salida"
-    nombre: normNombre(nombre),
-    uido: normUID(uido),
-    fecha_iso: t.iso,
-    fecha: t.fecha,
-    hora: t.hora,
-    tz: t.tz,
-    origen: "pwa-fichaje-qr"
-    // api_key: "solucionesbot2025" // <- si tu flujo lo exige, descomenta y valida en n8n
-  };
-  const r = await fetch(WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+
+  const fd = new FormData();
+  fd.append('tipo',   (tipo || 'entrada').toString().toLowerCase());
+  fd.append('nombre', normNombre(nombre));
+  fd.append('uido',   normUID(uido));
+  fd.append('fecha_iso', t.iso);
+  fd.append('fecha',     t.fecha);
+  fd.append('hora',      t.hora);
+  fd.append('tz',        t.tz);
+  fd.append('origen',    'pwa-fichaje-qr');
+  // fd.append('api_key','solucionesbot2025'); // ← si tu flow lo pide
+
+  const r = await fetch(WEBHOOK, { method: 'POST', body: fd });
   if (!r.ok) throw new Error(`WEBHOOK HTTP ${r.status}`);
-  return await r.json().catch(()=> ({}));
+  return await (r.headers.get('content-type')||'').includes('application/json')
+    ? r.json() : r.text();
 }
+
 
 /* ==== NOTA ==== */
 function loadNota(){ const el = $('#nota'); if(el) el.value = LS.get(LS_NOTA,"") || ""; }
