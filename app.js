@@ -81,15 +81,26 @@ function renderControl(items){
 }
 
 /* ==== API: VALIDACIÓN (GET) ==== */
+/* ==== API: VALIDACIÓN (POST) ==== */
 async function validarAcceso(nombre, uido){
   const n = normNombre(nombre);
   const u = normUID(uido);
-  const url = `${VALIDATE_URL}?nombre=${encodeURIComponent(n)}&uido=${encodeURIComponent(u)}`;
-  const r = await fetch(url, { method: "GET" });
+
+  const fd = new FormData();
+  fd.append("nombre", n);
+  fd.append("uido", u);
+  fd.append("origen", "PWA");
+
+  const r = await fetch(VALIDATE_URL, {
+    method: "POST",
+    body: fd
+  });
+
   if (!r.ok) throw new Error(`VALIDATE_URL HTTP ${r.status}`);
   const j = await r.json().catch(()=> ({}));
   return j?.ok === true;
 }
+
 
 /* ==== API: ENVIAR FICHAJE (POST) ==== */
 async function enviarFichaje({tipo, nombre, uido}){
