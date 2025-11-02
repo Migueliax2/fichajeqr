@@ -1,11 +1,12 @@
 /* ==== CONFIG ==== */
-const WEBHOOK = "https://primary-production-2aed.up.railway.app/webhook/validar-trabajador";          // n8n (POST)
-const VALIDATE_URL = "https://primary-production-2aed.up.railway.app/webhook/validar-trabajador";
+const VALIDATE_URL = "https://primary-production-2aed.up.railway.app/webhook/validar-trabajador"; // GET
+const WEBHOOK      = "https://primary-production-2aed.up.railway.app/webhook/fichaje-qr";        // POST
 
 /* ==== KEYS LS ==== */
 const LS_DATOS = "sb_fq_datos";
 const LS_FICHAJES = "sb_fq_fichajes";
 const LS_NOTA = "sb_fq_nota";
+
 
 /* ==== HELPERS ==== */
 const $ = (s)=>document.querySelector(s);
@@ -21,6 +22,54 @@ function nowParts(){
     tz: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 }
+function normNombre(x=""){
+  return String(x)
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase().replace(/[^A-Z ]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function normUID(x=""){
+  return String(x)
+    .replace(/\\n/g,"")
+    .replace(/\r?\n/g,"")
+    .replace(/\s+/g,"")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g,"");
+}
+
+async function validarAcceso(nombre, uido){
+  const n = normNombre(nombre);
+  const u = normUID(uido);
+  const url = `${VALIDATE_URL}?nombre=${encodeURIComponent(n)}&uido=${encodeURIComponent(u)}`;
+
+  const r = await fetch(url, { method: "GET" });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const j = await r.json();
+  return j?.ok === true;
+}
+
+async function enviarFichaje({tipo, nombre, uido}){
+  const payload = {
+    tipo,                              // "entrada" | "salida"
+    nombre: normNombre(nombre),
+    uido: normUID(uido),
+    ts: new Date().toISOString(),
+    origen: "PWA",
+    api_key: "solucionesbot2025"       // si tu flujo lo necesita
+  };
+
+  const r = await fetch(WEBHOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return await r.json().catch(() => ({}));
+}
+
 
 /* ==== TABS ==== */
 $$('.tabs button').forEach(b=>{
