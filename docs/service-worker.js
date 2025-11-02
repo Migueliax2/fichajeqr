@@ -1,5 +1,5 @@
 // Nombre del caché
-const CACHE_NAME = "solucionesbot-fichajeqr-v1";
+const CACHE_NAME = "solucionesbot-fichajeqr-v2";
 
 // Archivos a cachear
 const ASSETS = [
@@ -21,6 +21,14 @@ self.addEventListener("install", (e) => {
   );
   self.skipWaiting();
 });
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
 
 // Activación y limpieza de versiones antiguas
 self.addEventListener("activate", (e) => {
