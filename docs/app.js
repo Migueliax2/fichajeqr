@@ -1,3 +1,5 @@
+console.log("APP JS v2025-11-02-13h");
+
 /* ==== CONFIG (ENDPOINTS) ==== */
 // Validación de trabajador (GET en n8n)
 const VALIDATE_URL = "https://primary-production-2aed.up.railway.app/webhook/validar-trabajador";
