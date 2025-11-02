@@ -150,6 +150,7 @@ function saveNota(){
 }
 
 /* ==== INIT + UI ==== */
+const $datosMsg = document.getElementById('datos-valid-msg');
 document.addEventListener("DOMContentLoaded", () => {
   const $nombre = $('#nombre');
   const $uido   = $('#uido');
@@ -158,6 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const $vMsg   = $('#verif-msg');       // estado de validación
   const $fMsg   = $('#fichaje-msg');     // estado de envío
   const $ult    = $('#ultimo-fichaje');  // pre último fichaje
+  function resetDispositivo(){
+  [LS_DATOS, LS_FICHAJES, LS_NOTA, LS_ULTIMO].forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+document.getElementById('btn-reset')?.addEventListener('click', ()=>{
+  if (confirm('¿Seguro que quieres borrar todos los datos locales de este dispositivo?')) resetDispositivo();
+});
+
 
   // Cargar datos/nota/tabla
   const saved = LS.get(LS_DATOS, {});
@@ -201,18 +210,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try{
-        tell($vMsg, "Validando acceso…", "info");
-        const ok = await validarAcceso(nombre, uido);
-        if(ok){
-          tell($vMsg, "✅ Acceso verificado. Puedes fichar.", "ok");
-          setBtn(true);
-        }else{
-          tell($vMsg, "⛔ Empleado no encontrado.", "err");
-          setBtn(false);
-        }
-      }catch(e){
-        tell($vMsg, "⚠️ Error al validar. Revisa conexión.", "warn");
-        setBtn(false);
+        
+twinTell("Validando acceso…", "info");
+
+// OK
+twinTell("✅ Trabajador validado. Puedes fichar.", "ok");
+
+// No encontrado
+twinTell("⛔ Empleado no encontrado.", "err");
+
+// Falta nombre/UIDO
+twinTell("Completa nombre y UIDO para activar el fichaje.", "info");
+
+// Error
+twinTell("⚠️ Error al validar. Revisa conexión.", "warn");
+
       }
     }, 250);
   }
@@ -220,6 +232,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if ($nombre) $nombre.addEventListener("input", validarYReflejar);
   if ($uido)   $uido.addEventListener("input",   validarYReflejar);
   validarYReflejar(); // validación inicial
+  const twinTell = (txt, type) => {
+  tell($vMsg, txt, type);               // mensaje en pestaña FICHAJE
+  tell($datosMsg, txt, type);           // mismo mensaje en pestaña DATOS
+};
+
 
   // Guardar nota
   $('#btn-guardar-nota')?.addEventListener('click', saveNota);
