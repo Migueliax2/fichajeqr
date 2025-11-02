@@ -236,6 +236,18 @@ twinTell("⚠️ Error al validar. Revisa conexión.", "warn");
   tell($vMsg, txt, type);               // mensaje en pestaña FICHAJE
   tell($datosMsg, txt, type);           // mismo mensaje en pestaña DATOS
 };
+const prev = LS.get(LS_DATOS, {});
+LS.set(LS_DATOS, { nombre, uido });
+
+const esOtro = prev && (prev.nombre !== nombre || prev.uido !== uido);
+if (esOtro && loadFichajes().length) {
+  // Limpieza suave (solo si el usuario acepta)
+  if (confirm("Has cambiado de trabajador. ¿Limpiar fichajes locales del anterior?")) {
+    LS.set(LS_FICHAJES, []);
+    renderControl([]);
+  }
+  setTipoSugerido($tipo, nombre, uido); // recalcula sugerencia
+}
 
 
   // Guardar nota
