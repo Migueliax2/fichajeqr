@@ -1,5 +1,20 @@
 // Nombre del caché
 const CACHE_NAME = "solucionesbot-fichajeqr-v8";
+// Ejemplo de safe addAll
+const toCache = assets.filter(u => /^https?:\/\//.test(new URL(u, self.location).href) || u.startsWith('./') || u.startsWith('/'));
+
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open('sb-cache-v9'); // sube versión para forzar update
+    await cache.addAll(toCache);
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
 
 // Archivos a cachear
 const ASSETS = [
