@@ -80,7 +80,6 @@ function renderControl(items){
   });
 }
 
-/* ==== API: VALIDACIÓN (GET) ==== */
 /* ==== API: VALIDACIÓN (POST) ==== */
 async function validarAcceso(nombre, uido){
   const n = normNombre(nombre);
@@ -100,7 +99,6 @@ async function validarAcceso(nombre, uido){
   const j = await r.json().catch(()=> ({}));
   return j?.ok === true;
 }
-
 
 /* ==== API: ENVIAR FICHAJE (POST) ==== */
 async function enviarFichaje({tipo, nombre, uido}){
